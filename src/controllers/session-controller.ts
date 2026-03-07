@@ -168,9 +168,11 @@ export const handleSessionGet: Controller = async (req, res) => {
         result["last_change_id"] = session.files[0].last_modified.toString();
         result["last_change_timestamp"] = session.files[0].last_modified;
     } else {
+        result.id = session.id;
         result.modules = JSON.parse(session.modules);
         result.files = session.files;
         result.last_modified = session.last_modified;
+        result.expires_at = session.expires_at;
     }
     res.json(result);
 

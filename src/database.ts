@@ -55,8 +55,8 @@ export const create_session = async (server_id: string, plugin_version: string, 
     console.log(session);
 
     return new Promise((resolve, rej) => {
-        const stmt = database.prepare(`INSERT INTO sessions (id, server_id, plugin_version, access_token, created_at, expires_at, last_modified) VALUES (?, ?, ?, ?, ?, ?, ?)`);
-        const results = stmt.run(session.id, server_id, session.plugin_version, session.access_token, session.created_at, session.expires_at, 0);
+        const stmt = database.prepare(`INSERT INTO sessions (id, server_id, plugin_version, access_token, modules, created_at, expires_at, last_modified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+        const results = stmt.run(session.id, server_id, session.plugin_version, session.access_token, session.modules, session.created_at, session.expires_at, 0);
 
         const stmtFiles = database.prepare(`INSERT INTO sessions_contents (id, name, session_id, content, last_modified) VALUES (?, ?, ?, ?, ?)`);
         files.forEach(file => {
