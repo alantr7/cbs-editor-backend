@@ -11,4 +11,4 @@ app.use(express.json());
 
 setupRoutes(app);
 
-app.listen(9050);
+app.listen(process.env.PORT);
