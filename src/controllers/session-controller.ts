@@ -119,8 +119,8 @@ export const handleDemoSessionGet: Controller = async (req, res) => {
 };
 
 export const handleSessionGet: Controller = async (req, res) => {
-    const id = req.query.sessionId as string;
-    const cookieToken = req.cookies["access_token"];
+    const id = req.params.sessionId as string;
+    const cookieToken = req.headers.authorization?.substring("Bearer ".length);
 
     // Check if access token is present in cookies
     if (typeof cookieToken !== 'string') {
