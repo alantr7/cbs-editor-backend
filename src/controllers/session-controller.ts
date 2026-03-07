@@ -73,6 +73,13 @@ interface ModuleDTO {
 
 }
 
+const demoCode = `
+import bot;
+
+int main() {
+   
+}
+`.trim();
 export const handleDemoSessionGet: Controller = async (req, res) => {
     const demoSession: SessionDTO = {
         id: "demo",
@@ -104,15 +111,7 @@ export const handleDemoSessionGet: Controller = async (req, res) => {
                 ]
             }
         },
-        files: [{
-            id: "main.cbs", name: "main.cbs", last_modified: Date.now(), content: `
-                import bot;
-
-                int main() {
-
-                }
-            `.trim()
-        }],
+        files: [{ id: "main.cbs", name: "main.cbs", last_modified: Date.now(), content: demoCode }],
         last_modified: Date.now(),
     };
     res.status(200).json(demoSession);
