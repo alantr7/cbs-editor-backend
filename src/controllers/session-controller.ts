@@ -67,6 +67,7 @@ interface SessionDTO {
     modules: Record<string, ModuleDTO>,
     files: DatabaseSessionFile[],
     last_modified: number,
+    expires_at: number,
 };
 
 interface ModuleDTO {
@@ -113,6 +114,7 @@ export const handleDemoSessionGet: Controller = async (req, res) => {
         },
         files: [{ id: "main.cbs", name: "main.cbs", last_modified: Date.now(), content: demoCode }],
         last_modified: Date.now(),
+        expires_at: Date.now() + 3 * 60 * 60 * 1000,
     };
     res.status(200).json(demoSession);
 };
