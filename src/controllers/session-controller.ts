@@ -120,16 +120,16 @@ export const handleDemoSessionGet: Controller = async (req, res) => {
 
 export const handleSessionGet: Controller = async (req, res) => {
     const id = req.params.sessionId as string;
-    const cookieToken = req.headers.authorization?.substring("Bearer ".length);
+    const accessToken = req.headers.authorization?.substring("Bearer ".length);
 
     // Check if access token is present in cookies
-    if (typeof cookieToken !== 'string') {
+    if (typeof accessToken !== 'string') {
         res.status(401).end();
         return;
     }
 
     // Check if the access token is valid
-    const claims = verifyToken<JwtEditorSessionClaims>(cookieToken);
+    const claims = verifyToken<JwtEditorSessionClaims>(accessToken);
     if (claims == null) {
         res.status(401).end();
         return;
@@ -149,7 +149,7 @@ export const handleSessionGet: Controller = async (req, res) => {
     }
 
     // Check if the tokens match
-    if (session.access_token !== cookieToken) {
+    if (session.access_token !== accessToken) {
         res.status(403).end();
         return;
     }
@@ -176,17 +176,17 @@ export const handleSessionGet: Controller = async (req, res) => {
 };
 
 export const handleSessionUpdate: Controller = async (req, res) => {
-    const id = req.query.sessionId as string;
-    const cookieToken = req.cookies["access_token"];
+    const id = req.params.sessionId as string;
+    const accessToken = req.headers.authorization?.substring("Bearer ".length);
 
     // Check if access token is present in cookies
-    if (typeof cookieToken !== 'string') {
+    if (typeof accessToken !== 'string') {
         res.status(401).end();
         return;
     }
 
     // Check if the access token is valid
-    const claims = verifyToken<JwtEditorSessionClaims>(cookieToken);
+    const claims = verifyToken<JwtEditorSessionClaims>(accessToken);
     if (claims == null) {
         res.status(401).end();
         return;
@@ -206,7 +206,7 @@ export const handleSessionUpdate: Controller = async (req, res) => {
     }
 
     // Check if the tokens match
-    if (session.access_token !== cookieToken) {
+    if (session.access_token !== accessToken) {
         res.status(403).end();
         return;
     }
