@@ -1,4 +1,5 @@
 import { create_session, get_session, update_session, update_session_file } from "../database";
+import { demoSession } from "../demo";
 import { Controller } from "../types/controller"
 import { JwtEditorSessionClaims, JwtServerClaims } from "../types/jwt-claims-types";
 import { DatabaseSession, DatabaseSessionFile } from "../utils/dbmodels";
@@ -62,60 +63,8 @@ export const handleSessionCreate: Controller = async (req, res) => {
     })
 };
 
-interface SessionDTO {
-    id: string,
-    modules: Record<string, ModuleDTO>,
-    files: DatabaseSessionFile[],
-    last_modified: number,
-    expires_at: number,
-};
 
-interface ModuleDTO {
-
-}
-
-const demoCode = `
-import bot;
-
-int main() {
-   
-}
-`.trim();
 export const handleDemoSessionGet: Controller = async (req, res) => {
-    const demoSession: SessionDTO = {
-        id: "demo",
-        modules: {
-            bot: {
-                name: "bot",
-                functions: [
-                    { module: "bot", name: "move", return_type: "int", parameter_types: [ "string" ], completion: "move($1)$0" },
-                    { module: "bot", name: "print", return_type: "int", parameter_types: [ "string" ], completion: "print($1)$0" },
-                ]
-            },
-            math: {
-                name: "math",
-                functions: [
-                    { module: "math", name: "cos", return_type: "float", parameter_types: [ "float" ], completion: "cos($1)$0" },
-                    { module: "math", name: "sin", return_type: "float", parameter_types: [ "float" ], completion: "sin($1)$0" },
-                    { module: "math", name: "sqrt", return_type: "float", parameter_types: [ "float" ], completion: "sqrt($1)$0" },
-                    { module: "math", name: "test", return_type: "float", parameter_types: [ "float" ], completion: "test($1)$0" },
-                ]
-            },
-            lang: {
-                name: "lang",
-                functions: [
-                    { module: null, name: "strlen", return_type: "int", parameter_types: [ "string" ], completion: "strlen($1)$0" },
-                    { module: null, name: "is_int", return_type: "int", parameter_types: [ "string" ], completion: "is_int($1)$0" },
-                    { module: null, name: "to_int", return_type: "int", parameter_types: [ "string" ], completion: "to_int($1)$0" },
-                    { module: null, name: "is_float", return_type: "int", parameter_types: [ "string" ], completion: "is_float($1)$0" },
-                    { module: null, name: "to_float", return_type: "float", parameter_types: [ "string" ], completion: "to_float($1)$0" },
-                ]
-            }
-        },
-        files: [{ id: "main.cbs", name: "main.cbs", last_modified: Date.now(), content: demoCode }],
-        last_modified: Date.now(),
-        expires_at: Date.now() + 3 * 60 * 60 * 1000,
-    };
     res.status(200).json(demoSession);
 };
 
