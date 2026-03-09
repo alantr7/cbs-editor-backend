@@ -25,7 +25,8 @@ const demoCode = `
 import bot;
 
 int main() {
-   
+   bot.chat("Hello World!");
+   return 0;
 }
 `.trim();
 
@@ -35,17 +36,29 @@ export const demoSession: SessionDTO = {
         bot: {
             name: "bot",
             functions: [
+                { module: "bot", name: "chat", return_type: "int", parameter_types: [ "string" ], completion: "chat($1)$0" },
+                { module: "bot", name: "deposit_item", return_type: "int", parameter_types: [ "string" ], completion: "deposit_item($1)$0" },
+                { module: "bot", name: "get_block", return_type: "string", parameter_types: [ "string" ], completion: "get_block($1)$0" },
+                { module: "bot", name: "get_direction", return_type: "string", parameter_types: [], completion: "get_direction()$0" },
+                { module: "bot", name: "get_item", return_type: "string", parameter_types: [], completion: "get_item()$0" },
+                { module: "bot", name: "get_selected_slot", return_type: "number", parameter_types: [], completion: "get_selected_slot()$0" },
                 { module: "bot", name: "move", return_type: "int", parameter_types: [ "string" ], completion: "move($1)$0" },
                 { module: "bot", name: "print", return_type: "int", parameter_types: [ "string" ], completion: "print($1)$0" },
+                { module: "bot", name: "rotate_left", return_type: "int", parameter_types: [], completion: "rotate_left()$0" },
+                { module: "bot", name: "rotate_right", return_type: "int", parameter_types: [], completion: "rotate_right()$0" },
+                { module: "bot", name: "select_slot", return_type: "int", parameter_types: [ "int" ], completion: "select_slot($1)$0" },
+                { module: "bot", name: "set_status", return_type: "int", parameter_types: [ "string", "int" ], completion: "set_status($1, $2)$0" },
             ]
         },
         math: {
             name: "math",
             functions: [
+                { module: "math", name: "ceil", return_type: "float", parameter_types: [ "float" ], completion: "ceil($1)$0" },
                 { module: "math", name: "cos", return_type: "float", parameter_types: [ "float" ], completion: "cos($1)$0" },
+                { module: "math", name: "floor", return_type: "float", parameter_types: [ "float" ], completion: "floor($1)$0" },
+                { module: "math", name: "round", return_type: "float", parameter_types: [ "float" ], completion: "round($1)$0" },
                 { module: "math", name: "sin", return_type: "float", parameter_types: [ "float" ], completion: "sin($1)$0" },
                 { module: "math", name: "sqrt", return_type: "float", parameter_types: [ "float" ], completion: "sqrt($1)$0" },
-                { module: "math", name: "test", return_type: "float", parameter_types: [ "float" ], completion: "test($1)$0" },
             ]
         },
         lang: {
