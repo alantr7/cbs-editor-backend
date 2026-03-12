@@ -65,7 +65,11 @@ export const handleSessionCreate: Controller = async (req, res) => {
 
 
 export const handleDemoSessionGet: Controller = async (req, res) => {
-    res.status(200).json(demoSession);
+    res.status(200).json({
+        ...demoSession,
+        last_modified: Date.now(),
+        expires_at: Date.now() + 3 * 60 * 60 * 1000,
+    });
 };
 
 export const handleSessionGet: Controller = async (req, res) => {

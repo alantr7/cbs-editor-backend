@@ -73,6 +73,6 @@ export const demoSession: SessionDTO = {
         }
     },
     files: [{ id: "main.cbs", name: "main.cbs", last_modified: Date.now(), content: demoCode }],
-    last_modified: Date.now(),
-    expires_at: Date.now() + 3 * 60 * 60 * 1000,
+    last_modified: 0,
+    expires_at: 0,
 };
