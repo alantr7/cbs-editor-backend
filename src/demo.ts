@@ -2,6 +2,7 @@ import { DatabaseSessionFile } from "./utils/dbmodels";
 
 interface SessionDTO {
     id: string,
+    author?: string,
     modules: Record<string, ModuleDTO>,
     files: DatabaseSessionFile[],
     last_modified: number,
@@ -32,6 +33,7 @@ int main() {
 
 export const demoSession: SessionDTO = {
     id: "demo",
+    author: "Demo",
     modules: {
         bot: {
             name: "bot",
