@@ -36,6 +36,18 @@ export const create_session = async (server_id: string, plugin_version: string, 
     const duration = 3600 * 2;
     const expires_at = Date.now() + duration * 1000;
 
+    Object.values(modules).forEach((m: any) => {
+        m.functions.forEach((fun: any) => {
+            if (m.auto_import) {
+                fun.module = null;
+            } else {
+                fun.module = m.name;
+            }
+            fun.completion = `${fun.name}(${fun.parameter_types.map((type: string, idx: number) => `$${idx + 1}`).join(", ")})$0`;
+        });
+        delete m["auto_import"];
+    });
+
     const session: DatabaseSession = {
         id,
         files,
