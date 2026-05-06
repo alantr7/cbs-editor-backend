@@ -15,7 +15,7 @@ const database = Database(dataDirectory + "/sessions.db", {
 database.pragma("journal_mode = WAL");
 
 // Setup the database
-database.exec(`CREATE TABLE IF NOT EXISTS sessions (id PRIMARY KEY, server_id TEXT, plugin_version TEXT, access_token TEXT, modules TEXT, created_at BIGINT, expires_at BIGINT, last_modified BIGINT)`);
+database.exec(`CREATE TABLE IF NOT EXISTS sessions (id PRIMARY KEY, server_id TEXT, plugin_version TEXT, access_token TEXT, author TEXT, modules TEXT, created_at BIGINT, expires_at BIGINT, last_modified BIGINT)`);
 database.exec(`CREATE TABLE IF NOT EXISTS sessions_contents (id PRIMARY KEY, name VARCHAR(24), session_id TEXT, content TEXT(2048), last_modified BIGINT)`);
 
 export const get_session = async (id: string): Promise<any> => {
@@ -31,7 +31,7 @@ export const get_session = async (id: string): Promise<any> => {
     });
 }
 
-export const create_session = async (server_id: string, plugin_version: string, modules: any, files: DatabaseSessionFile[]): Promise<any> => {
+export const create_session = async (server_id: string, plugin_version: string, author: string | undefined, modules: any, files: DatabaseSessionFile[]): Promise<any> => {
     const id = uuid();
     const duration = 3600 * 2;
     const expires_at = Date.now() + duration * 1000;
@@ -48,6 +48,7 @@ export const create_session = async (server_id: string, plugin_version: string, 
         }, duration),
         created_at: Date.now(),
         expires_at,
+        author,
         modules: JSON.stringify(modules),
         last_modified: 0
     };
@@ -55,8 +56,8 @@ export const create_session = async (server_id: string, plugin_version: string, 
     console.log(session);
 
     return new Promise((resolve, rej) => {
-        const stmt = database.prepare(`INSERT INTO sessions (id, server_id, plugin_version, access_token, modules, created_at, expires_at, last_modified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
-        const results = stmt.run(session.id, server_id, session.plugin_version, session.access_token, session.modules, session.created_at, session.expires_at, 0);
+        const stmt = database.prepare(`INSERT INTO sessions (id, server_id, plugin_version, access_token, author, modules, created_at, expires_at, last_modified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+        const results = stmt.run(session.id, server_id, session.plugin_version, session.access_token, session.author, session.modules, session.created_at, session.expires_at, 0);
 
         const stmtFiles = database.prepare(`INSERT INTO sessions_contents (id, name, session_id, content, last_modified) VALUES (?, ?, ?, ?, ?)`);
         files.forEach(file => {

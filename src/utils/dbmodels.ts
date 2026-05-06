@@ -6,6 +6,7 @@ export interface DatabaseSession {
     created_at: number,
     expires_at: number,
     last_modified: number,
+    author?: string,
     modules: string,
     files: DatabaseSessionFile[],
 }

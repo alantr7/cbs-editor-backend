@@ -59,7 +59,7 @@ export const handleSessionCreate: Controller = async (req, res) => {
     }
 
     res.json({
-        ...(await create_session(id as string, rawVersion, req.body.modules, sessionFiles))
+        ...(await create_session(id as string, rawVersion, req.body.author, req.body.modules, sessionFiles))
     })
 };
 
@@ -123,6 +123,7 @@ export const handleSessionGet: Controller = async (req, res) => {
         result["last_change_timestamp"] = session.files[0].last_modified;
     } else {
         result.id = session.id;
+        result.author = session.author;
         result.modules = JSON.parse(session.modules);
         result.files = session.files;
         result.last_modified = session.last_modified;
