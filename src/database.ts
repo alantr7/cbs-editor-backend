@@ -15,6 +15,7 @@ const database = Database(dataDirectory + "/sessions.db", {
 database.pragma("journal_mode = WAL");
 
 // Setup the database
+// TODO: Use foreign keys and cascade on delete instead of the abomination at the bottom
 database.exec(`CREATE TABLE IF NOT EXISTS sessions (id PRIMARY KEY, server_id TEXT, plugin_version TEXT, access_token TEXT, author TEXT, modules TEXT, created_at BIGINT, expires_at BIGINT, last_modified BIGINT)`);
 database.exec(`CREATE TABLE IF NOT EXISTS sessions_contents (id PRIMARY KEY, name VARCHAR(24), session_id TEXT, content TEXT(2048), last_modified BIGINT)`);
 
@@ -103,6 +104,14 @@ export const update_session = async (session: DatabaseSession): Promise<Database
         } else {
             rej();
         }
+    });
+}
+
+export const delete_session = async (session: DatabaseSession): Promise<void> => {
+    return new Promise((resolve, rej) => {
+        database.prepare(`DELETE FROM sessions_contents WHERE session_id = ?`).run(session.id);
+        database.prepare(`DELETE FROM sessions WHERE id = ?`).run(session.id);
+        resolve();
     });
 }
 

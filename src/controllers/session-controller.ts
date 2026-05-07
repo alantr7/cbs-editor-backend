@@ -1,4 +1,4 @@
-import { create_session, get_session, update_session, update_session_file } from "../database";
+import { create_session, delete_session, get_session, update_session, update_session_file } from "../database";
 import { demoSession } from "../demo";
 import { Controller } from "../types/controller"
 import { JwtEditorSessionClaims, JwtServerClaims } from "../types/jwt-claims-types";
@@ -246,5 +246,45 @@ export const handleSessionUpdate: Controller = async (req, res) => {
     }
 
     await update_session(session);
+    res.status(200).end();
+};
+
+export const handleSessionDelete: Controller = async (req, res) => {
+    const id = req.params.sessionId as string;
+    const accessToken = req.headers.authorization?.substring("Bearer ".length);
+
+    // Check if access token is present in cookies
+    if (typeof accessToken !== 'string') {
+        res.status(401).end();
+        return;
+    }
+
+    // Check if the access token is valid
+    const claims = verifyToken<JwtEditorSessionClaims>(accessToken);
+    if (claims == null) {
+        res.status(401).end();
+        return;
+    }
+
+    // Check if the claims are valid
+    const time = Date.now();
+    if (time >= claims.expires_at || claims.id !== id) {
+        res.status(403).end();
+        return;
+    }
+
+    const session = (await get_session(id)) as DatabaseSession | null | undefined;
+    if (session === undefined || session === null) {
+        res.status(404).end();
+        return;
+    }
+
+    // Check if the tokens match
+    if (session.access_token !== accessToken) {
+        res.status(403).end();
+        return;
+    }
+    
+    await delete_session(session);
     res.status(200).end();
 };

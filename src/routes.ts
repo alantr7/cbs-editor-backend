@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { handleServerCreate } from "./controllers/server-controller";
-import { handleDemoSessionGet, handleSessionCreate, handleSessionGet, handleSessionStatusGet, handleSessionUpdate } from "./controllers/session-controller";
+import { handleDemoSessionGet, handleSessionCreate, handleSessionDelete, handleSessionGet, handleSessionStatusGet, handleSessionUpdate } from "./controllers/session-controller";
 
 export function setupRoutes(express: Application) {
 
@@ -11,5 +11,6 @@ export function setupRoutes(express: Application) {
     express.get("/api/sessions/:sessionId", handleSessionGet);
     express.get("/api/sessions/:sessionId/status", handleSessionStatusGet);
     express.put("/api/sessions/:sessionId", handleSessionUpdate);
+    express.delete("/api/sessions/:sessionId", handleSessionDelete);
 
 }
