@@ -133,6 +133,53 @@ export const handleSessionGet: Controller = async (req, res) => {
 
 };
 
+export const handleSessionStatusGet: Controller = async (req, res) => {
+    const id = req.params.sessionId as string;
+    const accessToken = req.headers.authorization?.substring("Bearer ".length);
+
+    // Check if access token is present in cookies
+    if (typeof accessToken !== 'string') {
+        res.status(401).end();
+        return;
+    }
+
+    // Check if the access token is valid
+    const claims = verifyToken<JwtEditorSessionClaims>(accessToken);
+    if (claims == null) {
+        res.status(401).end();
+        return;
+    }
+
+    // Check if the claims are valid
+    const time = Date.now();
+    if (time >= claims.expires_at || claims.id !== id) {
+        res.status(403).end();
+        return;
+    }
+
+    const session = (await get_session(id)) as DatabaseSession | null | undefined;
+    if (session === undefined || session === null) {
+        res.status(404).end();
+        return;
+    }
+
+    // Check if the tokens match
+    if (session.access_token !== accessToken) {
+        res.status(403).end();
+        return;
+    }
+    
+    const plugin_version = Version.from(session.plugin_version);
+
+    // Check if there are changes if "last_change_id" is present
+    if (req.query.last_modified && session.last_modified === parseInt(req.query.last_modified as string)) {
+        res.status(200).end();
+        return;
+    }
+
+    res.status(200).end();
+};
+
 export const handleSessionUpdate: Controller = async (req, res) => {
     const id = req.params.sessionId as string;
     const accessToken = req.headers.authorization?.substring("Bearer ".length);
