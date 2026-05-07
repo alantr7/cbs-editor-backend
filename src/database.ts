@@ -28,6 +28,8 @@ export const get_session = async (id: string): Promise<any> => {
                 ...result,
                 files
             });
+        } else {
+            resolve(null);
         }
     });
 }
