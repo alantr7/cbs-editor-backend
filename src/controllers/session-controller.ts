@@ -168,8 +168,6 @@ export const handleSessionStatusGet: Controller = async (req, res) => {
         res.status(403).end();
         return;
     }
-    
-    const plugin_version = Version.from(session.plugin_version);
 
     // Check if there are changes if "last_change_id" is present
     if (req.query.last_modified && session.last_modified === parseInt(req.query.last_modified as string)) {
@@ -216,8 +214,6 @@ export const handleSessionUpdate: Controller = async (req, res) => {
         return;
     }
     
-    const plugin_version = Version.from(session.plugin_version);
-
     const { files } = req.body;
     if (!Array.isArray(files)) {
         res.status(400).end();
@@ -266,22 +262,9 @@ export const handleSessionDelete: Controller = async (req, res) => {
         return;
     }
 
-    // Check if the claims are valid
-    const time = Date.now();
-    if (time >= claims.expires_at || claims.id !== id) {
-        res.status(403).end();
-        return;
-    }
-
     const session = (await get_session(id)) as DatabaseSession | null | undefined;
     if (session === undefined || session === null) {
         res.status(404).end();
-        return;
-    }
-
-    // Check if the tokens match
-    if (session.access_token !== accessToken) {
-        res.status(403).end();
         return;
     }
     
