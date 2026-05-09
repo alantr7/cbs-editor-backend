@@ -133,6 +133,10 @@ export const handleSessionGet: Controller = async (req, res) => {
 
 };
 
+export const handleDemoSessionStatusGet: Controller = async (req, res) => {
+    res.status(200).end();
+};
+
 export const handleSessionStatusGet: Controller = async (req, res) => {
     const id = req.params.sessionId as string;
     const accessToken = req.headers.authorization?.substring("Bearer ".length);
